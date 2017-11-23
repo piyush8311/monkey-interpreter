@@ -36,6 +36,9 @@ type LetStatement struct {
 	Value Expression
 }
 
+func (ls *LetStatement) statementNode() {}
+
+func (ls *LetStatement) TokenLiteral() string { return ls.Token.Literal}
 /* Identifier implemets Node and Expression interfaces. It implements
    Expression interface because indentifiers are used as expressions on
    right side of Let Statements
