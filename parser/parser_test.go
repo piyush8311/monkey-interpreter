@@ -17,6 +17,7 @@ func TestLetStatements(t *testing.T) {
 	p := New(lex)
 
 	program := p.ParseProgram()
+	checkParseErrors(t, p)
 	if program == nil {
 		t.Fatalf("ParseProgram() returned nil")
 	}
@@ -63,4 +64,19 @@ func testLetStatement(t *testing.T, stmt ast.Statement, name string) bool {
 	}
 
 	return true
+}
+
+func checkParseErrors(t *testing.T, parser *Parser) {
+	errors := parser.errors
+
+	if len(errors) == 0 {
+		return
+	}
+
+	t.Errorf("Parser has %d errors", len(errors))
+
+	for _, msg := range errors {
+		t.Errorf("Parser error %q", msg)
+	}
+	t.FailNow()
 }
