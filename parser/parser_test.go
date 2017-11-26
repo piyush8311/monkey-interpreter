@@ -96,6 +96,40 @@ func TestReturnStatements(t *testing.T) {
 	}
 }
 
+func TestExpressionStatements(t *testing.T) {
+	input := `
+	foobar;
+	`
+
+	lex := lexer.New(input)
+	p := New(lex)
+
+	program := p.ParseProgram()
+	checkParseErrors(t, p)
+
+	if len(program.Statements) != 1 {
+		t.Fatalf("program.Statements does not contain 1 statements. got=%d", len(program.Statements))
+	}
+
+	stmt, ok := program.Statements[0].(*ast.ExpressionStatement)
+	if !ok {
+		t.Fatalf("program.Statements[0] not *ast.ExpressionStatement. got=%T", stmt)
+	}
+
+	ident, ok := stmt.Expression.(*ast.Identifier)
+	if !ok {
+		t.Fatalf("expression not *ast.Identifier. got=%T", stmt.Expression)
+	}
+
+	if ident.Value != "foobar" {
+		t.Fatalf("ident.Value not 'foobar'. got=%s", ident.Value)
+	}
+
+	if ident.TokenLiteral() != "foobar" {
+		t.Fatalf("ident.TokenLiteral not 'foobar'. got=%s", ident.TokenLiteral())
+	}
+}
+
 func checkParseErrors(t *testing.T, parser *Parser) {
 	errors := parser.errors
 
